@@ -46,6 +46,33 @@
             #buttons {
                 transform: translate(-50%, 200px) !important;
             }
+
+            #topleftcorner {
+                position: absolute;
+                background-color:red;
+                width: 256px;
+                height: 256px;
+                opacity: 0.5;
+            }
+
+            #bottomleftcorner {
+                position: absolute;
+                background-color:blue;
+                width: 256px;
+                height: 256px;
+                bottom: 0;
+                opacity: 0.5;
+            }
+
+            #progressbar {
+                position: absolute;
+                background-color:green;
+                width: 900px;
+                height: 256px;
+                bottom: 0;
+                left: 256px;
+                opacity: 0.5;
+            }
         </style>
     </head>
     <body>
@@ -58,6 +85,10 @@
             <button onclick="SeekToRelativeTime(-10);">Skip -10 seconds</button>
         </div>
         </div>
+
+        <div id="topleftcorner"></div>
+        <div id="bottomleftcorner"></div>
+        <div id="progressbar"></div>
 
         <script>
             // 2. This code loads the IFrame Player API code asynchronously.
