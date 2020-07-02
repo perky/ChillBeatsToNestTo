@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
+        <script src="velocity.min.js"></script>
         <style>
             body {
                 background-image: url(paper_fibers.png);
@@ -13,12 +14,13 @@
                 position: absolute;
                 width: 100%;
                 height: 100%;
-                background: linear-gradient(323deg, #e0adcdc0, #e2c4a690);
-                background-size: 400% 400%;
+                background-color: #aaaaff;
+                /* background: linear-gradient(323deg, #e0adcdc0, #e2c4a690); */
+                /* background-size: 400% 400%; */
 
-                -webkit-animation: AnimationName 19s ease infinite;
-                -moz-animation: AnimationName 19s ease infinite;
-                animation: AnimationName 19s ease infinite;
+                /* -webkit-animation: AnimationName 19s ease infinite; */
+                /* -moz-animation: AnimationName 19s ease infinite; */
+                /* animation: AnimationName 19s ease infinite; */
             }
 
             @-webkit-keyframes AnimationName {
@@ -42,10 +44,12 @@
                 top: 50%;
                 left: 50%;
                 transform: translate(-50%, -50%);
+                z-index: 1;
             }
             #buttons {
                 transform: translate(-50%, 200px) !important;
             }
+            
 
             #topleftcorner {
                 position: absolute;
@@ -53,6 +57,7 @@
                 width: 256px;
                 height: 256px;
                 opacity: 0.5;
+                z-index: 0;
             }
 
             #bottomleftcorner {
@@ -62,6 +67,7 @@
                 height: 256px;
                 bottom: 0;
                 opacity: 0.5;
+                z-index: 0;
             }
 
             #progressbar {
@@ -72,23 +78,35 @@
                 bottom: 0;
                 left: 256px;
                 opacity: 0.5;
+                z-index: 0;
+            }
+
+            #nest {
+                position: absolute;
+                background-color:purple;
+                width: 640px;
+                height: 390px;
+                opacity: 0.5;
+                z-index: 2;
             }
         </style>
     </head>
     <body>
-        <div id="gradientback">
+        <div id="gradientback"></div>
         <!-- 1. The <iframe> (and video player) will replace this <div> tag. -->
         <div id="player" class="middle"></div>
+
+        <!-- <div id="topleftcorner"></div> -->
+        <!-- <div id="bottomleftcorner"></div> -->
+        <!-- <div id="progressbar"></div> -->
+        <!-- <div id="nest" class="middle"></div> -->
+
         <div id="buttons" class="middle">
             <button onclick="SeekToAbsoluteTime(0);">Back to Beginning</button>
-            <button onclick="SeekToRelativeTime(10);">Skip +10 seconds</button>
-            <button onclick="SeekToRelativeTime(-10);">Skip -10 seconds</button>
+            <button onclick="SeekToRelativeTime(10);">+10 seconds</button>
+            <button onclick="SeekToRelativeTime(-10);">-10 seconds</button>
+            <button id="nextSectionButton" onclick="SeekNextSection();">Next Section: Foundations</button>
         </div>
-        </div>
-
-        <div id="topleftcorner"></div>
-        <div id="bottomleftcorner"></div>
-        <div id="progressbar"></div>
 
         <script>
             // 2. This code loads the IFrame Player API code asynchronously.
@@ -98,13 +116,55 @@
             var firstScriptTag = document.getElementsByTagName('script')[0];
             firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 
+            var sections = [
+                {
+                    'name': 'Intro',
+                    'start': 0,
+                    'end': 35,
+                    'color': '#aaaaff'
+                },
+                {
+                    'name': 'Foundations',
+                    'start': 35,
+                    'interlude': (2*60) + 40,
+                    'end': 4*60,
+                    'color': '#ffaa7f'
+                },
+                {
+                    'name': 'Materials',
+                    'start': 4*60,
+                    'interlude': (6*60) + 5,
+                    'end': (6*60) + 46,
+                    'color': '#aaaa7f'
+                },
+                {
+                    'name': 'Decorating',
+                    'start': (6*60) + 47,
+                    'interlude': (8*60) + 51,
+                    'end': (9*60) + 48,
+                    'color': '#ffb2d0'
+                },
+                {
+                    'name': 'Nesting',
+                    'start': (9*60) + 49,
+                    'end': (11*60) + 53,
+                    'color': '#aaff7f'
+                },
+                {
+                    'name': 'Outro',
+                    'start': (11*60) + 54,
+                    'end': (13*60) + 49,
+                    'color': '#bbbbbb'
+                }
+            ];
+            var currentSectionIdx = 0;
+
             // 3. This function creates an <iframe> (and YouTube player)
             //    after the API code downloads.
             var player;
             function onYouTubeIframeAPIReady() {
                 player = new YT.Player('player', {
-                    
-                    videoId: 'EzX4PX31Ivc',
+                    videoId: 'gxbjV41-AlU',
                     playerVars: {'controls': 0, 'modestbranding': 1, 'playsinline': 1, 'fs': 0},
                     events: {
                         'onReady': onPlayerReady,
@@ -121,11 +181,17 @@
             // 5. The API calls this function when the player's state changes.
             //    The function indicates that when playing a video (state=1),
             //    the player should play for six seconds and then stop.
-            var done = false;
+            var bPlaying = false;
+            var updateInterval;
             function onPlayerStateChange(event) {
-                if (event.data == YT.PlayerState.PLAYING && !done) {
-                    //setTimeout(stopVideo, 6000);
-                    //done = true;
+                if (event.data == YT.PlayerState.PLAYING) {
+                    updateInterval = setInterval(CheckForIntervalLoopAndRewind, 100);
+                    Velocity(document.querySelector('#gradientback'), {
+                        backgroundColor: sections[currentSectionIdx].color,
+                        duration: 2
+                    });
+                } else {
+                    clearInterval(updateInterval);
                 }
             }
 
@@ -135,10 +201,55 @@
 
             function SeekToAbsoluteTime(seconds) {
                 player.seekTo(seconds);
+                if (seconds == 0) {
+                    currentSectionIdx = 0;
+                    UpdateNextSectionButton();
+                }
             }
 
             function SeekToRelativeTime(seconds) {
                 player.seekTo(player.getCurrentTime() + seconds);
+            }
+
+            function SeekNextSection() {
+                IncrementSection();
+                if (currentSectionIdx < sections.length) {
+                    player.seekTo(sections[currentSectionIdx].start, true);
+                }
+            }
+
+            function IncrementSection() {
+                currentSectionIdx++;
+                if (currentSectionIdx < sections.length) {
+                    UpdateNextSectionButton();
+                    Velocity(document.querySelector('#gradientback'), {
+                        backgroundColor: sections[currentSectionIdx].color,
+                        duration: 6
+                    });
+                }
+            }
+
+            function UpdateNextSectionButton() {
+                if (currentSectionIdx + 1 < sections.length) {
+                    document.querySelector('#nextSectionButton').innerText = "Next Section: " + sections[currentSectionIdx+1].name;
+                    document.querySelector('#nextSectionButton').style.visibility = 'visible';
+                } else {
+                    document.querySelector('#nextSectionButton').style.visibility = 'hidden';
+                }
+            }
+
+            function CheckForIntervalLoopAndRewind(timestamp) {
+                if (player && currentSectionIdx < sections.length) {
+                    var currentPlayerTime = player.getCurrentTime();
+                    var currentSection = sections[currentSectionIdx];
+                    if (currentPlayerTime > currentSection.end) {
+                        if (currentSection.interlude) {
+                            player.seekTo(currentSection.interlude);
+                        } else {
+                            IncrementSection();
+                        }
+                    }
+                }
             }
         </script>
     </body>
