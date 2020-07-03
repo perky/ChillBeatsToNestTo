@@ -4,7 +4,7 @@
         <script src="velocity.min.js"></script>
         <style>
             body {
-                background-image: url(paper_fibers.png);
+                background-image: url(Artwork/skyTile_placeholder.png);
                 margin: 0;
                 padding: 0;
             }
@@ -15,6 +15,7 @@
                 width: 100%;
                 height: 100%;
                 background-color: #aaaaff;
+                opacity: 0.25;
                 /* background: linear-gradient(323deg, #e0adcdc0, #e2c4a690); */
                 /* background-size: 400% 400%; */
 
@@ -50,44 +51,65 @@
                 transform: translate(-50%, 200px) !important;
             }
             
-
             #topleftcorner {
                 position: absolute;
-                background-color:red;
+                background-image: url(Artwork/artcornerLeftUp_placeholder.png);
                 width: 256px;
                 height: 256px;
-                opacity: 0.5;
                 z-index: 0;
             }
 
             #bottomleftcorner {
                 position: absolute;
-                background-color:blue;
+                background-image: url(Artwork/artcornerLeftBottom_placeholder.png);
                 width: 256px;
                 height: 256px;
                 bottom: 0;
-                opacity: 0.5;
                 z-index: 0;
             }
 
             #progressbar {
                 position: absolute;
-                background-color:green;
+                background-image: url(Artwork/BackgroundProgressBar_placeholder.png);
                 width: 900px;
                 height: 256px;
                 bottom: 0;
-                left: 256px;
-                opacity: 0.5;
-                z-index: 0;
+                left: 200px;
+                z-index: 1;
+            }
+
+            #progressbarimage
+            {
+                clip-path: inset(0px 100% 0px 0px);
             }
 
             #nest {
                 position: absolute;
-                background-color:purple;
-                width: 640px;
-                height: 390px;
+                background-image: url(Artwork/UINestWIP.png);
+                background-size: 800px 487.5px;
+                width: 800px;
+                height: 487.5px;
+                z-index: 0;
+            }
+
+            #playbutton {
+                position: relative;
+                top: 50px;
+                left: 80px;
+                cursor: pointer;
+            }
+            #playbutton:hover {
                 opacity: 0.5;
-                z-index: 2;
+            }
+
+            #volumebutton {
+                position: relative;
+                top: 100px;
+                left: -90px;
+                cursor: pointer;
+            }
+            #volumebutton:hover {
+                opacity: 0.5;
             }
         </style>
     </head>
@@ -96,10 +118,16 @@
         <!-- 1. The <iframe> (and video player) will replace this <div> tag. -->
         <div id="player" class="middle"></div>
 
-        <!-- <div id="topleftcorner"></div> -->
-        <!-- <div id="bottomleftcorner"></div> -->
-        <!-- <div id="progressbar"></div> -->
-        <!-- <div id="nest" class="middle"></div> -->
+        <div id="topleftcorner"></div>
+        <div id="bottomleftcorner">
+            <img id="playbutton" src="Artwork/playButton_placeholder.png" onclick="TogglePlayPause()"/>
+            <img id="volumebutton" src="Artwork/volumeButton_placeholder.png" onclick="ToggleAudio()"/>
+        </div>
+        
+        <div id="progressbar">
+            <img id="progressbarimage" src="Artwork/ForegroundProgressBar_placeholder.png" />
+        </div>
+        <div id="nest" class="middle"></div>
 
         <div id="buttons" class="middle">
             <button onclick="SeekToAbsoluteTime(0);">Back to Beginning</button>
@@ -199,6 +227,24 @@
                 player.stopVideo();
             }
 
+            function TogglePlayPause() {
+                if (player.getPlayerState() == YT.PlayerState.PLAYING) {
+                    player.pauseVideo();
+                } else {
+                    player.playVideo();
+                }
+            }
+
+            function ToggleAudio() {
+                if (player.getPlayerState() == YT.PlayerState.PLAYING) {
+                    if (player.isMuted()) {
+                        player.unMute();
+                    } else {
+                        player.mute();
+                    }
+                }
+            }
+
             function SeekToAbsoluteTime(seconds) {
                 player.seekTo(seconds);
                 if (seconds == 0) {
@@ -241,7 +287,9 @@
             function CheckForIntervalLoopAndRewind(timestamp) {
                 if (player && currentSectionIdx < sections.length) {
                     var currentPlayerTime = player.getCurrentTime();
+                    var normalizedTime = 1 - (currentPlayerTime / player.getDuration());
                     var currentSection = sections[currentSectionIdx];
+                    document.getElementById('progressbarimage').style.clipPath = "inset(0px " + (normalizedTime * 100) + "% 0px 0px)";
                     if (currentPlayerTime > currentSection.end) {
                         if (currentSection.interlude) {
                             player.seekTo(currentSection.interlude);
