@@ -3,8 +3,12 @@
     <head>
         <script src="velocity.min.js"></script>
         <style>
+            html {
+                margin: 0;
+                padding: 0;
+            }
             body {
-                background-image: url(Artwork/skyTile_placeholder.png);
+                background-image: url(Artwork/skyTile.png);
                 margin: 0;
                 padding: 0;
             }
@@ -53,7 +57,7 @@
             
             #topleftcorner {
                 position: absolute;
-                background-image: url(Artwork/artcornerLeftUp_placeholder.png);
+                background-image: url(Artwork/artcornerLeftUp.png);
                 width: 256px;
                 height: 256px;
                 z-index: 1;
@@ -61,7 +65,7 @@
 
             #bottomleftcorner {
                 position: absolute;
-                background-image: url(Artwork/artcornerLeftBottom_placeholder.png);
+                background-image: url(Artwork/artcornerLeftBottom.png);
                 width: 256px;
                 height: 256px;
                 bottom: 0;
@@ -70,8 +74,9 @@
 
             #progressbar {
                 position: absolute;
-                background-image: url(Artwork/BackgroundProgressBar_placeholder.png);
-                width: 900px;
+                background-image: url(Artwork/BackgroundProgressBar.png);
+                min-width: 400px;
+                max-width: 900px;
                 height: 256px;
                 bottom: 0;
                 left: 200px;
@@ -81,34 +86,37 @@
             #progressbarimage
             {
                 clip-path: inset(0px 100% 0px 0px);
+                width:inherit;
+                
             }
 
             #nest {
                 position: absolute;
-                background-image: url(Artwork/UINestWIP.png);
+                background-image: url(Artwork/UINest.png);
                 background-size: 800px 487.5px;
                 width: 800px;
                 height: 487.5px;
                 z-index: 0;
             }
 
-            #playbutton {
+            #playbutton, #pausebutton {
                 position: relative;
                 top: 50px;
                 left: 80px;
                 cursor: pointer;
             }
-            #playbutton:hover {
-                opacity: 0.5;
+            #playbutton {
+                display: none;
             }
 
             #volumebutton {
-                position: relative;
-                top: 100px;
-                left: -90px;
+                position: absolute;
+                bottom: 50px;
+                left: 20px;
                 cursor: pointer;
             }
-            #volumebutton:hover {
+
+            .custombutton:hover {
                 opacity: 0.5;
             }
 
@@ -130,20 +138,21 @@
 
         <div id="topleftcorner"></div>
         <div id="bottomleftcorner">
-            <img id="playbutton" src="Artwork/playButton_placeholder.png" onclick="TogglePlayPause()"/>
-            <img id="volumebutton" src="Artwork/volumeButton_placeholder.png" onclick="ToggleAudio()"/>
+            <img id="playbutton" class="custombutton" src="Artwork/playButton.png" onclick="PlayButtonPress()"/>
+            <img id="pausebutton" class="custombutton" src="Artwork/pauseButton.png" onclick="PauseButtonPress()"/>
+            <img id="volumebutton" class="custombutton" src="Artwork/soundButton.png" onclick="ToggleAudio()"/>
         </div>
         
         <div id="progressbar">
-            <img id="progressbarimage" src="Artwork/ForegroundProgressBar_placeholder.png" />
+            <img id="progressbarimage" src="Artwork/ForegroundProgressBar.png" />
         </div>
         <div id="nest" class="middle"></div>
 
         <div id="buttons" class="middle">
-            <button onclick="SeekToAbsoluteTime(0);">Back to Beginning</button>
-            <button onclick="SeekToRelativeTime(10);">+10 seconds</button>
-            <button onclick="SeekToRelativeTime(-10);">-10 seconds</button>
-            <button id="nextSectionButton" onclick="SeekNextSection();">Next Section: Foundations</button>
+            <!-- <button onclick="SeekToAbsoluteTime(0);">Back to Beginning</button> -->
+            <!-- <button onclick="SeekToRelativeTime(10);">+10 seconds</button> -->
+            <!-- <button onclick="SeekToRelativeTime(-10);">-10 seconds</button> -->
+            <!-- <button id="nextSectionButton" onclick="SeekNextSection();">Next Section: Foundations</button> -->
         </div>
 
         <script>
@@ -240,9 +249,23 @@
             function TogglePlayPause() {
                 if (player.getPlayerState() == YT.PlayerState.PLAYING) {
                     player.pauseVideo();
+                    document.getElementById('playbutton').src = "Artwork/pauseButton.png";
                 } else {
                     player.playVideo();
+                    document.getElementById('playbutton').src = "Artwork/playButton.png";
                 }
+            }
+
+            function PauseButtonPress() {
+                document.getElementById('playbutton').style.display = 'block';
+                document.getElementById('pausebutton').style.display = 'none';
+                player.pauseVideo();
+            }
+
+            function PlayButtonPress() {
+                document.getElementById('pausebutton').style.display = 'block';
+                document.getElementById('playbutton').style.display = 'none';
+                player.playVideo();
             }
 
             function ToggleAudio() {
@@ -302,7 +325,7 @@
                     document.getElementById('progressbarimage').style.clipPath = "inset(0px " + (normalizedTime * 100) + "% 0px 0px)";
                     if (currentPlayerTime > currentSection.end) {
                         if (currentSection.interlude) {
-                            player.seekTo(currentSection.interlude);
+                            //player.seekTo(currentSection.interlude);
                         } else {
                             IncrementSection();
                         }
