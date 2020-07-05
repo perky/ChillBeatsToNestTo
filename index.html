@@ -113,6 +113,9 @@
                 position: absolute;
                 bottom: 50px;
                 left: 20px;
+            }
+
+            .custombutton {
                 cursor: pointer;
             }
 
@@ -144,9 +147,9 @@
 
         <div id="topleftcorner"></div>
         <div id="bottomleftcorner">
-            <img id="playbutton" class="custombutton" src="Artwork/playButton.png" onclick="PlayButtonPress()"/>
-            <img id="pausebutton" class="custombutton" src="Artwork/pauseButton.png" onclick="PauseButtonPress()"/>
-            <img id="volumebutton" class="custombutton" src="Artwork/soundButton.png" onclick="ToggleAudio()"/>
+            <img id="playbutton" class="custombutton" src="Artwork/playButton.png" onclick="PlayButtonPress()" title="play"/>
+            <img id="pausebutton" class="custombutton" src="Artwork/pauseButton.png" onclick="PauseButtonPress()" title="pause"/>
+            <img id="volumebutton" class="custombutton" src="Artwork/soundButton.png" onclick="ToggleAudio()" title="toggle sound"/>
         </div>
         
         <div id="progressbar">
@@ -155,14 +158,14 @@
         <div id="nest" class="middle"></div>
 
         <div id="buttons" class="middle">
-            <!-- <button onclick="SeekToAbsoluteTime(0);">Back to Beginning</button> -->
-            <!-- <button onclick="SeekToRelativeTime(10);">+10 seconds</button> -->
-            <!-- <button onclick="SeekToRelativeTime(-10);">-10 seconds</button> -->
-            <!-- <button id="nextSectionButton" onclick="SeekNextSection();">Next Section: Foundations</button> -->
+            <img  class="custombutton" src="Artwork/previousButton.png" onclick="SeekPreviousSection()" title="goto previous section"/>
+            <img  class="custombutton" src="Artwork/10SecLessButton.png" onclick="SeekToRelativeTime(-10)" title="skip -10 seconds"/>
+            <img  class="custombutton" src="Artwork/10SecMoreButton.png" onclick="SeekToRelativeTime(10)" title="skip +10 seconds"/>
+            <img  class="custombutton" src="Artwork/nextButton.png" onclick="SeekNextSection()" title="goto next section"/>
         </div>
 
-        <a class="twitter-timeline" href="https://twitter.com/TwitterDev/timelines/539487832448843776?ref_src=twsrc%5Etfw"
-            data-chrome="nofooter, noheader, transparent"
+        <a class="twitter-timeline" href="https://twitter.com/TweetstoNestTo?ref_src=twsrc%5Etfw"
+            data-chrome="nofooter, transparent"
             
             width="260px"
             height="80%"
@@ -305,6 +308,14 @@
                 player.seekTo(player.getCurrentTime() + seconds);
             }
 
+            function SeekPreviousSection() {
+                currentSectionIdx--;
+                if (currentSectionIdx < 0) {
+                    currentSectionIdx = 0;
+                }
+                player.seekTo(sections[currentSectionIdx].start, true);
+            }
+            
             function SeekNextSection() {
                 IncrementSection();
                 if (currentSectionIdx < sections.length) {
@@ -325,10 +336,10 @@
 
             function UpdateNextSectionButton() {
                 if (currentSectionIdx + 1 < sections.length) {
-                    document.querySelector('#nextSectionButton').innerText = "Next Section: " + sections[currentSectionIdx+1].name;
-                    document.querySelector('#nextSectionButton').style.visibility = 'visible';
+                    //document.querySelector('#nextSectionButton').innerText = "Next Section: " + sections[currentSectionIdx+1].name;
+                    //document.querySelector('#nextSectionButton').style.visibility = 'visible';
                 } else {
-                    document.querySelector('#nextSectionButton').style.visibility = 'hidden';
+                    //document.querySelector('#nextSectionButton').style.visibility = 'hidden';
                 }
             }
 
@@ -342,7 +353,7 @@
                     document.getElementById('progressbarimage').style.webkitClipPath = clipPath;
                     if (currentPlayerTime > currentSection.end) {
                         if (currentSection.interlude) {
-                            //player.seekTo(currentSection.interlude);
+                            player.seekTo(currentSection.interlude);
                         } else {
                             IncrementSection();
                         }
