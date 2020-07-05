@@ -86,8 +86,8 @@
             #progressbarimage
             {
                 clip-path: inset(0px 100% 0px 0px);
+                -webkit-clip-path: inset(0px 100% 0px 0px);
                 width:inherit;
-                
             }
 
             #nest {
@@ -322,7 +322,9 @@
                     var currentPlayerTime = player.getCurrentTime();
                     var normalizedTime = 1 - (currentPlayerTime / player.getDuration());
                     var currentSection = sections[currentSectionIdx];
-                    document.getElementById('progressbarimage').style.clipPath = "inset(0px " + (normalizedTime * 100) + "% 0px 0px)";
+                    var clipPath = "inset(0px " + (normalizedTime * 100) + "% 0px 0px)";
+                    document.getElementById('progressbarimage').style.clipPath = clipPath;
+                    document.getElementById('progressbarimage').style.webkitClipPath = clipPath;
                     if (currentPlayerTime > currentSection.end) {
                         if (currentSection.interlude) {
                             //player.seekTo(currentSection.interlude);
