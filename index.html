@@ -2,6 +2,7 @@
 <html>
     <head>
         <script src="velocity.min.js"></script>
+        <link href="https://fonts.googleapis.com/css2?family=Caveat+Brush&display=swap" rel="stylesheet">
         <style>
             html {
                 margin: 0;
@@ -51,6 +52,28 @@
                 transform: translate(-50%, -50%);
                 z-index: 1;
             }
+            
+            .nav {
+                position: absolute;
+                font-family: 'Caveat Brush', cursive;
+                font-size: 2em;
+                top: 0;
+                right: 0px;
+                padding: 10px;
+                z-index: 1;
+            }
+
+            .nav a
+            {
+                color: #3a3a3a;
+                text-decoration: none;
+            }
+
+            .nav a:hover
+            {
+                color: aquamarine;
+            }
+
             #buttons {
                 transform: translate(-50%, 200px) !important;
             }
@@ -172,14 +195,9 @@
             <img  class="custombutton" src="Artwork/nextButton.png" onclick="SeekNextSection()" title="goto next section"/>
         </div>
 
-        <a class="twitter-timeline" href="https://twitter.com/TweetstoNestTo?ref_src=twsrc%5Etfw"
-            data-chrome="nofooter, transparent"
-            
-            width="260px"
-            height="80%"
-        >
-        </a> 
-        <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+        <div class="nav">
+            <a href="/about.html">About Us</a>
+        </div>
 
         <script>
             // 2. This code loads the IFrame Player API code asynchronously.
