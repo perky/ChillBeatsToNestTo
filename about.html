@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <script src="velocity.min.js"></script>
+        <link href="https://fonts.googleapis.com/css2?family=Caveat+Brush&display=swap" rel="stylesheet">
+        <style>
+            html {
+                margin: 0;
+                padding: 0;
+            }
+            body {
+                background-image: url(Artwork/skyTile.png);
+                margin: 0;
+                padding: 0;
+            }
+            #gradientback {
+                margin: 0px;
+                padding: 0px;
+                position: absolute;
+                width: 100%;
+                height: 100%;
+                background-color: #aaaaff;
+                opacity: 0.25;
+                z-index: -1;
+            }
+
+            @-webkit-keyframes AnimationName {
+                0%{background-position:0% 50%}
+                50%{background-position:100% 50%}
+                100%{background-position:0% 50%}
+            }
+            @-moz-keyframes AnimationName {
+                0%{background-position:0% 50%}
+                50%{background-position:100% 50%}
+                100%{background-position:0% 50%}
+            }
+            @keyframes AnimationName {
+                0%{background-position:0% 50%}
+                50%{background-position:100% 50%}
+                100%{background-position:0% 50%}
+            }
+            .middle {
+                position: absolute;
+                margin: auto;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                z-index: 1;
+            }
+            #buttons {
+                transform: translate(-50%, 200px) !important;
+            }
+            
+            #topleftcorner {
+                position: absolute;
+                background-image: url(Artwork/artcornerLeftUp.png);
+                width: 256px;
+                height: 256px;
+                z-index: 1;
+            }
+
+            #bottomleftcorner {
+                position: absolute;
+                background-image: url(Artwork/artcornerLeftBottom.png);
+                width: 256px;
+                height: 256px;
+                bottom: 0;
+                z-index: 1;
+            }
+
+            #progressbar {
+                position: absolute;
+                background-image: url(Artwork/BackgroundProgressBar.png);
+                min-width: 400px;
+                max-width: 900px;
+                height: 256px;
+                bottom: 0;
+                left: 200px;
+                z-index: 1;
+            }
+
+            #progressbarimage
+            {
+                clip-path: inset(0px 100% 0px 0px);
+                -webkit-clip-path: inset(0px 100% 0px 0px);
+                width:inherit;
+            }
+
+            #nest {
+                position: absolute;
+                background-image: url(Artwork/UINest.png);
+                background-size: 800px 487.5px;
+                width: 800px;
+                height: 487.5px;
+                z-index: 0;
+            }
+
+            #playbutton, #pausebutton {
+                position: relative;
+                top: 50px;
+                left: 80px;
+                cursor: pointer;
+            }
+            #playbutton {
+                display: none;
+            }
+
+            #volumebutton {
+                position: absolute;
+                bottom: 50px;
+                left: 20px;
+            }
+
+            .custombutton {
+                cursor: pointer;
+            }
+
+            .custombutton:hover {
+                opacity: 0.5;
+            }
+
+            .twitter-timeline {
+                position: absolute !important;
+                right: 20px;
+                top: 10%;
+            }
+
+            .content {
+                font-family: 'Caveat Brush', cursive;
+                font-size: 1.4em;
+                padding: 120px;
+                width: 50%;
+                z-index: 20;
+            }
+
+            .nav {
+                position: absolute;
+                font-family: 'Caveat Brush', cursive;
+                font-size: 2em;
+                top: 0;
+                right: 0px;
+                padding: 10px;
+                z-index: 1;
+            }
+
+            a
+            {
+                color: #3a3a3a;
+                text-decoration: none;
+            }
+
+            a:hover
+            {
+                color: aquamarine;
+            }
+
+            @media only screen and (max-width: 1000px) {
+                #progressbar {
+                    visibility: hidden !important;
+                    display: none !important;
+                }
+                #gradientback {
+                    visibility: hidden !important;
+                    display: none !important;
+                }
+            }
+            @media only screen and (max-width: 1300px) {
+                .twitter-timeline {
+                    visibility: hidden !important;
+                    display: none !important;
+                }
+            }
+        </style>
+        <!-- <meta name="viewport" content="height=device-height, initial-scale=1.0"> -->
+    </head>
+    <body>
+        <div id="gradientback"></div>
+
+        <div class="nav">
+            <a href="/index.html">Home</a>
+        </div>
+
+        <div class="content">
+            <p>
+                Chill Tweets To Nest To is an audio game which invites you to relax, discover some fasinating facts about three very special birds, and create your own personal nest. All while listening to an sublime original score.
+            </p>
+            <p>
+                Will your nest be sparkly and dazzling like the Song Thrush, or secure and warm like the little Wren? Perhaps it will be something completely different like the Great Crested Grebe's floating nest. Whatever you decide to create, the only thing that matter is that it's perfect for whatever you need.
+            </p>
+            <p>
+                So, sit back, relax, and allow yourself a break with Chill Tweets To Nest To.
+            </p>
+            <p>
+                Chill Tweets To Nest To was created as part of The Neighbourhood Jam 2020<br>
+                #NBHJam
+            </p>
+            <p>
+                This game was created by:
+                <a href="https://twitter.com/mayacomposer">Maya Engel</a>, 
+                <a href="https://twitter.com/locogameluke">Luke Perkin</a>, 
+                <a href="https://twitter.com/LuciHolland">Luci Holland</a>, 
+                <a href="https://twitter.com/Captain_Ogilvy">Chess Pearson</a>, 
+                <a href="https://twitter.com/winternatters">Natalie Winter</a>, 
+                <a href="https://twitter.com/Lihwem">Wilfried Nass</a>, 
+                <a href="https://twitter.com/nattychisholm">Natalie Chisholm</a>, 
+                <a href="http://laurenmiddleton.co.uk/">Lauren Middleton</a>, 
+                <a href="https://twitter.com/benjamin_sabin">Ben Sabin</a>, 
+                <a href="https://twitter.com/DanERouse">Dan Rouse</a>, 
+                <a href="https://twitter.com/ChungLeda">Leda Chung</a>, 
+                <a href="https://twitter.com/Odris_Den">Laura De Stefani</a>, 
+                <a href="">Ines, 
+                <a href="https://twitter.com/seasylphgames">Elizabeth Simoens</a>
+            </p>
+        </div>
+
+        <a class="twitter-timeline" href="https://twitter.com/TweetstoNestTo?ref_src=twsrc%5Etfw"
+            data-chrome="nofooter, transparent"
+            
+            width="420px"
+            height="80%"
+        >
+        </a> 
+        <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+    </body>
+</html>
